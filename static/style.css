@@ -1,0 +1,16 @@
+/* minimal style if you don't have original */
+*{box-sizing:border-box} body{margin:0;font-family:Segoe UI,Arial;background:#eef3f7;color:#0b2644}
+.topbar{display:flex;align-items:center;justify-content:space-between;background:#012a56;color:#fff;padding:12px 20px}
+.badge{font-weight:700;background:#fff;color:#012a56;padding:6px 10px;border-radius:6px}
+.center{display:flex;justify-content:center;padding:30px}
+.card{background:#fff;width:420px;padding:22px;border-radius:10px;box-shadow:0 6px 18px rgba(2,18,43,0.08)}
+.card.wide{width:1000px}
+.primary{background:#013a7a;color:#fff;padding:10px;border-radius:6px;border:none;cursor:pointer}
+.notice{margin-top:12px;padding:8px;background:#fff8e6;border-left:4px solid #ffd966;border-radius:6px}
+.footer{text-align:center;padding:14px;color:#6b7b8f;font-size:12px}
+.records{width:100%;border-collapse:collapse;margin-top:12px}
+.records th,.records td{padding:10px 8px;border-bottom:1px solid #e6eef7;text-align:left}
+.records th{background:#f3f7fb;color:#012a56;font-weight:700}
+.mono{font-family:monospace}
+.search{display:flex;gap:8px;margin-bottom:10px}
+.btn{display:inline-block;padding:6px 10px;background:#013a7a;color:#fff;border-radius:6px;text-decoration:none}

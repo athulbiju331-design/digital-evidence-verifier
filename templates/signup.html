@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+  <title>Sign Up</title>
+</head>
+<body>
+
+<h2>Officer Registration</h2>
+
+{% if message %}
+  <div style="color:red">{{ message }}</div>
+{% endif %}
+
+{% if success %}
+  <div style="color:green">
+    ✅ Account Created Successfully<br><br>
+    <b>Username:</b> {{ username }} <br>
+    <b>Email:</b> {{ email }} <br><br>
+    ⏳ Wait for Admin Approval
+  </div>
+{% else %}
+
+<form method="post">
+
+  Full Name:<br>
+  <input type="text" name="full_name" required><br><br>
+
+  Email:<br>
+  <input type="email" name="email" required><br><br>
+
+  Mobile Number:<br>
+  <input type="text" name="phone" pattern="[0-9]{10}" required><br><br>
+
+  Position:<br>
+  <input type="text" name="position"><br><br>
+
+  Station:<br>
+  <input type="text" name="station"><br><br>
+
+  Password:<br>
+  <input type="password" name="password" required><br><br>
+
+  <button type="submit">Create Account</button>
+
+</form>
+
+{% endif %}
+
+<br><a href="{{ url_for('login') }}">Back to Login</a>
+
+</body>
+</html>

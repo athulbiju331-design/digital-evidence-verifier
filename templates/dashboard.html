@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+</head>
+<body>
+
+<h2>Admin Dashboard – Approve Officers</h2>
+
+<table border="1" cellpadding="8">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Username</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+
+  {% for u in users %}
+  <tr>
+    <td>{{ u.id }}</td>
+    <td>{{ u.full_name }}</td>
+    <td>{{ u.email }}</td>
+    <td>{{ u.phone }}</td>
+    <td>{{ u.username }}</td>
+    <td>
+      {% if u.approved == 1 %}
+        ✅ Approved
+      {% else %}
+        ⏳ Pending
+      {% endif %}
+    </td>
+
+    <td>
+      {% if u.approved == 0 %}
+        <form method="post" action="{{ url_for('approve_user', user_id=u.id) }}">
+          <button name="action" value="approve">Approve</button>
+          <button name="action" value="reject">Reject</button>
+        </form>
+      {% else %}
+        ---
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<br>
+<a href="{{ url_for('logout') }}">Logout</a>
+
+</body>
+</html>

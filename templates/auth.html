@@ -1,0 +1,105 @@
+<!-- templates/auth.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ 'Sign up' if tab=='signup' else 'Login' }} — Digital Evidence Verifier</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='auth-style.css') }}">
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+
+      <!-- left column (form) -->
+      <div class="left">
+        <header class="brand">
+          <div class="logo">POLICE CYBER CELL</div>
+          <div class="product">Digital Evidence Verifier</div>
+        </header>
+
+        <nav class="tabs">
+          <a class="tab {% if tab=='login' %}active{% endif %}" href="{{ url_for('login') }}">Login</a>
+          <a class="tab {% if tab=='signup' %}active{% endif %}" href="{{ url_for('signup') }}">Sign up</a>
+        </nav>
+
+        <div class="form-wrap">
+          {% if tab == 'login' %}
+            {% if message %}<div class="msg error">{{ message }}</div>{% endif %}
+            <form action="{{ url_for('login') }}" method="post" class="form">
+              <label class="field"><span>Email or username</span>
+                <input name="username" type="text" autocomplete="username" required>
+              </label>
+
+              <label class="field"><span>Password</span>
+                <input name="password" type="password" autocomplete="current-password" required>
+              </label>
+
+              <div class="row-between">
+                <a class="link-small" href="#">Forgot your password?</a>
+                <button class="btn primary" type="submit">Login</button>
+              </div>
+            </form>
+
+            <div class="hint">Don't have account? <a href="{{ url_for('signup') }}">Sign up</a></div>
+
+          {% else %}
+            {% if message %}<div class="msg error">{{ message }}</div>{% endif %}
+            {% if success %}<div class="msg success">{{ message }}</div>{% endif %}
+            <form action="{{ url_for('signup') }}" method="post" class="form">
+              <label class="field"><span>Full name</span>
+                <input name="full_name" type="text" required>
+              </label>
+
+              <label class="field"><span>Email</span>
+                <input name="email" type="email" autocomplete="email" required>
+              </label>
+
+              <div class="two-col">
+                <label class="field"><span>Position</span>
+                  <input name="position" type="text" placeholder="SI / CI">
+                </label>
+                <label class="field"><span>Station</span>
+                  <input name="station" type="text" placeholder="Pala">
+                </label>
+              </div>
+
+              <label class="field"><span>Password</span>
+                <input name="password" type="password" autocomplete="new-password" required>
+              </label>
+
+              <div class="row-between">
+                <div></div>
+                <button class="btn primary" type="submit">Create account</button>
+              </div>
+            </form>
+
+            <div class="hint">After signup admin approval is required. Your username will be shown after submission.</div>
+          {% endif %}
+        </div>
+
+        <footer class="small-note">
+          <small>Digital Forensics — Demo system</small>
+        </footer>
+      </div>
+
+      <!-- right column (graphic) -->
+      <div class="right">
+        <!-- You can replace this with a real SVG/PNG illustrating laptop -->
+        <div class="art">
+          <img src="{{ url_for('static', filename='auth-art.svg') }}" alt="illustration" onerror="this.style.display='none'">
+          <!-- fallback simple illustration -->
+          <div class="art-fallback">
+            <div class="laptop">
+              <div class="screen"></div>
+              <div class="keyboard"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- auth-card -->
+  </div>
+
+</body>
+</html>

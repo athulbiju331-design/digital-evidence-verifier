@@ -1,0 +1,50 @@
+<!-- templates/view.html -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Records</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='auth-style.css') }}"></head>
+<body>
+<header class="topbar">
+  <div class="badge">POLICE CYBER CELL</div>
+  <div class="title">Digital Evidence Verifier</div>
+  <div class="nav"><a href="{{ url_for('index') }}">Home</a> | <a href="{{ url_for('login') }}">Login</a></div>
+</header>
+<main style="padding:30px;display:flex;justify-content:center">
+  <div class="card wide">
+    <h2>Stored Evidence / Logs</h2>
+    <form action="{{ url_for('search') }}" method="get" class="search"><input name="keyword" placeholder="Search by case, filename or officer"><button class="btn">Search</button></form>
+    <table class="records" style="width:100%;margin-top:12px">
+      <thead>
+        <tr><th>Case ID</th><th>File</th><th>Officer</th><th>Uploaded On</th><th>SHA-256</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+      {% if evidence %}
+        {% for r in evidence %}
+        <tr>
+          <td>{{ r['case_id'] }}</td>
+          <td>{{ r['filename'] }}</td>
+          <td>{{ r['officer'] }}</td>
+          <td>{{ r['timestamp'] }}</td>
+          <td class="mono">{{ r['sha256'][:40] }}...</td>
+          <td>
+            <a class="btn" href="{{ url_for('verify', evidence_id=r['id']) }}">Verify</a>
+            {% if session.get('role') in ['admin','officer'] %}
+            <a class="btn" href="{{ url_for('download', evidence_id=r['id']) }}">Download</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      {% elif logs %}
+        <tr><th>Case ID</th><th>File</th><th>Officer</th><th>Action</th><th>Status</th><th>When</th></tr>
+        {% for l in logs %}
+        <tr><td>{{ l[0] }}</td><td>{{ l[1] }}</td><td>{{ l[2] }}</td><td>{{ l[3] }}</td><td>{{ l[4] }}</td><td>{{ l[5] }}</td></tr>
+        {% endfor %}
+      {% else %}
+        <tr><td colspan="6">No records found.</td></tr>
+      {% endif %}
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

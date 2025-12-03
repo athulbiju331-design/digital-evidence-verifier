@@ -1,0 +1,30 @@
+<!-- templates/result.html -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Verification Report</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='auth-style.css') }}"></head>
+<body>
+<header class="topbar">
+  <div class="badge">POLICE CYBER CELL</div>
+  <div class="title">Verification Report</div>
+  <div class="nav"><a href="{{ url_for('index') }}">Home</a> | <a href="{{ url_for('view') }}">View Evidence</a></div>
+</header>
+<main style="padding:30px;display:flex;justify-content:center">
+  <div class="report">
+    <h2>Evidence Verification Report</h2>
+    <div class="row"><span class="k">Case ID:</span><span class="v">{{ case_id }}</span></div>
+    <div class="row"><span class="k">File:</span><span class="v">{{ filename }}</span></div>
+    <div class="row"><span class="k">Officer:</span><span class="v">{{ officer }}</span></div>
+    <div class="row"><span class="k">Checked At:</span><span class="v">{{ upload_time }}</span></div>
+    <hr>
+    <div class="row"><span class="k">Stored SHA-256:</span><span class="v mono">{{ db_hash }}</span></div>
+    <div class="row"><span class="k">Current SHA-256:</span><span class="v mono">{{ new_hash }}</span></div>
+    <div class="status-card {% if tampered %}bad{% else %}good{% endif %}">
+      <div class="status-title">{% if tampered %}EVIDENCE TAMPERED{% else %}EVIDENCE VERIFIED{% endif %}</div>
+      <div class="status-msg">{{ message }}</div>
+    </div>
+    <div class="actions"><a class="btn" href="{{ url_for('index') }}">Upload Another</a><a class="btn" href="{{ url_for('view') }}">View All Evidence</a></div>
+  </div>
+</main>
+</body>
+</html>
