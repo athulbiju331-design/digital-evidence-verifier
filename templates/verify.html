@@ -1,32 +1,67 @@
-<!-- templates/verify.html -->
 <!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Verify Evidence</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='auth-style.css') }}"></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Verify Evidence</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='auth-style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    .mono { font-family: monospace; font-size: 13px; }
+    .msg.success { background:#e6ffea; color:#165c2d; padding:8px; border-radius:6px; margin-top:10px; }
+    .msg.danger { background:#ffecec; color:#8a1c1c; padding:8px; border-radius:6px; margin-top:10px; }
+  </style>
+</head>
+
 <body>
+
 <header class="topbar">
   <div class="badge">POLICE CYBER CELL</div>
   <div class="title">Verify Evidence</div>
-  <div class="nav"><a href="{{ url_for('view') }}">Back</a></div>
+
+  <div class="nav">
+    <a href="{{ url_for('view') }}">Back</a> |
+
+    {% if session.get('username') %}
+      <span style="margin-right:10px;">{{ session.get('username') }}</span>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+  </div>
 </header>
+
 <main style="padding:30px;display:flex;justify-content:center">
   <div class="card">
-    <h2>Verify Evidence</h2>
-    <p><strong>Case ID:</strong> {{ row['case_id'] }}</p>
-    <p><strong>File:</strong> {{ row['filename'] }}</p>
-    <p><strong>Stored SHA-256:</strong> <span class="mono">{{ row['sha256'] }}</span></p>
+
+    <h2>Verify Evidence Integrity</h2>
+
+    <p><strong>Case ID:</strong> {{ row.case_id }}</p>
+    <p><strong>File:</strong> {{ row.filename }}</p>
+    <p><strong>Stored SHA-256:</strong></p>
+    <p class="mono">{{ row.sha256 }}</p>
+
     <form method="post" enctype="multipart/form-data">
-      <label class="field"><span>Upload file to verify</span><input type="file" name="file" required></label>
-      <div style="display:flex;justify-content:flex-end"><button class="btn primary" type="submit">Check File</button></div>
+      <label class="field">
+        <span>Upload file to verify</span>
+        <input type="file" name="file" required>
+      </label>
+
+      <div style="display:flex;justify-content:flex-end">
+        <button class="btn primary" type="submit">Check File</button>
+      </div>
     </form>
+
+    <!-- FLASH MESSAGES -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for cat, msg in messages %}
-          <div class="msg">{{ msg }}</div>
+          <div class="msg {{ cat }}">{{ msg }}</div>
         {% endfor %}
       {% endif %}
     {% endwith %}
+
   </div>
 </main>
+
 </body>
 </html>

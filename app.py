@@ -11,8 +11,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "evidence.db")
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 
-EMAIL_ADDRESS = "your_email@gmail.com"        # 🔴 CHANGE THIS
-EMAIL_PASSWORD = "your_gmail_app_password"   # 🔴 CHANGE THIS
+EMAIL_ADDRESS = "your_email@gmail.com"          # 🔴 change
+EMAIL_PASSWORD = "your_gmail_app_password"     # 🔴 change
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -272,6 +272,47 @@ def upload():
 
     flash("Evidence Uploaded Successfully")
     return redirect(url_for("index"))
+
+@app.route("/view")
+@role_required("officer","admin")
+def view():
+    conn = get_conn(); cur = conn.cursor()
+    cur.execute("SELECT * FROM evidence ORDER BY timestamp DESC")
+    rows = cur.fetchall()
+    conn.close()
+    return render_template("view.html", evidence=rows)
+
+# ✅✅✅ VERIFY ROUTE — THIS FIXES YOUR ERROR ✅✅✅
+@app.route("/verify/<int:evidence_id>", methods=["GET","POST"])
+@role_required("officer","admin")
+def verify(evidence_id):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM evidence WHERE id=?", (evidence_id,))
+    row = cur.fetchone()
+    conn.close()
+
+    if not row:
+        abort(404)
+
+    if request.method == "POST":
+        if "file" not in request.files:
+            flash("No file selected")
+            return redirect(request.url)
+
+        file = request.files["file"]
+        tmp_path = os.path.join(UPLOAD_FOLDER, "tmp_" + file.filename)
+        file.save(tmp_path)
+
+        _, current_sha = calculate_hashes(tmp_path)
+        os.remove(tmp_path)
+
+        if current_sha == row["sha256"]:
+            flash("✅ File Verified — No Tampering", "success")
+        else:
+            flash("🚨 Tampering Detected", "danger")
+
+    return render_template("verify.html", row=row)
 
 # ---------------- ADMIN ----------------
 

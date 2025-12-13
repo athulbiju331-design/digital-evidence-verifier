@@ -1,54 +1,166 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
   <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='auth-style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      margin: 0;
+    }
+
+    header {
+      background: #0b9f79;
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 1000px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #f1f5f9;
+    }
+
+    .approved {
+      color: green;
+      font-weight: bold;
+    }
+
+    .pending {
+      color: orange;
+      font-weight: bold;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-approve {
+      background: #16a34a;
+      color: white;
+    }
+
+    .btn-reject {
+      background: #dc2626;
+      color: white;
+    }
+
+    .logout {
+      margin-top: 18px;
+      text-align: right;
+    }
+  </style>
 </head>
+
 <body>
 
-<h2>Admin Dashboard – Approve Officers</h2>
+<header>
+  <div class="title">Admin Dashboard – Officer Approval</div>
+  <div>
+    Admin: {{ session.get('username') }} |
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+</header>
 
-<table border="1" cellpadding="8">
-  <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Phone</th>
-    <th>Username</th>
-    <th>Status</th>
-    <th>Action</th>
-  </tr>
+<main>
+  <div class="card">
+    <h2>Registered Officers</h2>
 
-  {% for u in users %}
-  <tr>
-    <td>{{ u.id }}</td>
-    <td>{{ u.full_name }}</td>
-    <td>{{ u.email }}</td>
-    <td>{{ u.phone }}</td>
-    <td>{{ u.username }}</td>
-    <td>
-      {% if u.approved == 1 %}
-        ✅ Approved
-      {% else %}
-        ⏳ Pending
-      {% endif %}
-    </td>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Username</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
 
-    <td>
-      {% if u.approved == 0 %}
-        <form method="post" action="{{ url_for('approve_user', user_id=u.id) }}">
-          <button name="action" value="approve">Approve</button>
-          <button name="action" value="reject">Reject</button>
-        </form>
-      {% else %}
-        ---
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.full_name }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.phone }}</td>
+        <td>{{ u.username }}</td>
 
-<br>
-<a href="{{ url_for('logout') }}">Logout</a>
+        <td>
+          {% if u.approved == 1 %}
+            <span class="approved">✅ Approved</span>
+          {% else %}
+            <span class="pending">⏳ Pending</span>
+          {% endif %}
+        </td>
+
+        <td>
+          {% if u.approved == 0 %}
+            <form method="post" action="{{ url_for('approve_user', user_id=u.id) }}" style="display:flex;gap:8px;justify-content:center">
+              <button class="btn btn-approve" name="action" value="approve">Approve</button>
+              <button class="btn btn-reject" name="action" value="reject">Reject</button>
+            </form>
+          {% else %}
+            —
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+</main>
 
 </body>
 </html>

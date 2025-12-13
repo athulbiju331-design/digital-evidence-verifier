@@ -1,27 +1,65 @@
-<!-- templates/index.html -->
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8"><title>Upload Evidence</title>
+  <meta charset="utf-8">
+  <title>Upload Evidence</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='auth-style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+
 <header class="topbar">
   <div class="badge">POLICE CYBER CELL</div>
   <div class="title">Digital Evidence Verifier</div>
-  <div class="nav"><a href="{{ url_for('view') }}">View Evidence</a> | {% if session.get('username') %}<a href="{{ url_for('logout') }}">Logout</a>{% else %}<a href="{{ url_for('login') }}">Login</a>{% endif %}</div>
+
+  <div class="nav">
+    <a href="{{ url_for('view') }}">View Evidence</a> |
+
+    {% if session.get('username') %}
+      <span style="margin-right:10px;">{{ session.get('username') }}</span>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+  </div>
 </header>
+
 <main style="padding:30px;display:flex;justify-content:center">
   <div class="card">
+
     <h2>Upload Evidence</h2>
-    {% if message %}<div class="msg error">{{ message }}</div>{% endif %}
+
+    {% if message %}
+      <div class="msg error">{{ message }}</div>
+    {% endif %}
+
     <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
-      <label class="field"><span>Case ID (leave blank to auto-generate)</span><input type="text" name="case_id"></label>
-      <label class="field"><span>Officer Name (username)</span><input type="text" name="officer" placeholder="officer.username"></label>
-      <label class="field"><span>Select Evidence File</span><input type="file" name="file" required></label>
-      <div style="display:flex;justify-content:flex-end"><button class="btn primary" type="submit">Upload & Verify</button></div>
+
+      <label class="field">
+        <span>Case ID (leave blank to auto-generate)</span>
+        <input type="text" name="case_id" placeholder="CE-250210-123">
+      </label>
+
+      <label class="field">
+        <span>Officer Username</span>
+        <input type="text" name="officer" value="{{ session.get('username') }}" readonly>
+      </label>
+
+      <label class="field">
+        <span>Select Evidence File</span>
+        <input type="file" name="file" required>
+      </label>
+
+      <div style="display:flex;justify-content:flex-end">
+        <button class="btn primary" type="submit">
+          Upload & Verify
+        </button>
+      </div>
+
     </form>
+
   </div>
 </main>
+
 </body>
 </html>
